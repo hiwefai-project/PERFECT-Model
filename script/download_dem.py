@@ -119,7 +119,7 @@ def process_dem():
                 all_filenames.append(filename)
 
     if all_filenames:
-        combined_filename = os.path.join(os.getcwd(), "campania_dem.tiff")
+        combined_filename = os.path.join(os.getcwd(), "data/campania_dem_combined.tiff")
         gdal_command = f"gdal_merge.py -o {combined_filename} {' '.join(all_filenames)}"
         print(f"Esecuzione del comando GDAL: {gdal_command}")
         subprocess.run(gdal_command, shell=True)
