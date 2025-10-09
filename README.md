@@ -1,4 +1,4 @@
-# 🌊 Flood Risk Model
+# 🌊 PERFECT Model
 
 **PERFECT-M** is a Python-based framework for **hydrological analysis and flood risk assessment**.  
 It integrates multiple geospatial datasets — including **Digital Elevation Model (DEM)**, **Land Cover (GLC)**, **Curve Number (CN)**, and **radar precipitation data** — to compute **surface runoff** and generate a **flood risk map** using D8 flow direction algorithms.
