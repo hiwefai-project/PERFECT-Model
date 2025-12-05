@@ -1,45 +1,48 @@
-from raster_utils import *
-from hydrology import *
-from termcolor import colored
-import script.download 
-import config  
+\"\"\"Main entry point for PERFECT-M.
 
-def main():
-    print(colored("Avvio del processo di elaborazione dei dati...", "cyan"))
-    
-    script.download.main()
+This script parses command-line arguments (notably the path to the
+configuration JSON file), sets the appropriate environment variable,
+and then calls the high-level workflow function.
+\"\"\"
 
-    # Caricamento DEM
-    print(colored("Caricamento del DEM in corso...", "green"))
-    dem_data, dem_profile = latlon_load_and_plot_dem(config.DEM_FILEPATH)
-    MASK = sea_mask(config.DEM_FILEPATH)
-        
-    # Crop del radar
-    print(colored("Esecuzione del crop del radar...", "yellow"))
-    crop_tiff_to_campania(config.RADAR_FILEPATH, config.RADAR_CAMPANIA)
-    
-    # Riallineamento della mappa CN al DEM
-    print(colored("Riallineamento della mappa Curve Number al DEM...", "green"))
-    align_radar_to_dem(config.CN_MAP_FILEPATH, config.DEM_FILEPATH, config.ALIGNED_CN_FILEPATH)
-    
-    # Caricamento mappa Curve Number riallineata
-    print(colored("Caricamento della mappa Curve Number riallineata...", "yellow"))
-    cn_map, _ = latlon_load_and_plot_land_cover(config.ALIGNED_CN_FILEPATH)
-    
-    # Calcolo del deflusso superficiale (Runoff)
-    print(colored("Calcolo del deflusso superficiale...", "blue"))
-    runoff = calculate_accumulated_runoff("data/test_26mar", cn_map, MASK, config.DEM_FILEPATH, "runoff", output_format="netcdf")
-    plot_territory_boundaries(dem_data, runoff)
-    
-    print(colored("Calcolo della direzione del flusso D8...", "blue"))
-    d8_initialize(config.DEM_FILEPATH, config.D8_FILEPATH)
-    # scalability_test(config.DEM_FILEPATH, config.D8_FILEPATH)
-    # scalability_test(config.DEM_FILEPATH, config.D8_FILEPATH, MASK)
-    
-    flood_risk_map = compute_flood_risk(config.D8_FILEPATH, runoff)
-    visualize_flood_risk_with_legend(flood_risk_map, dem_data)
-    
-    print(colored("Processo completato con successo!", "cyan"))
+import argparse
+import os
 
-if __name__ == "__main__":
+from perfectm.pipeline.workflow import run_full_pipeline
+
+
+def parse_args() -> argparse.Namespace:
+    \"\"\"Parse command-line arguments for the PERFECT-M runner.
+
+    Returns
+    -------
+    args:
+        Object containing parsed arguments as attributes.
+    \"\"\"
+    parser = argparse.ArgumentParser(description=\"Run the PERFECT-M hydrological model.\")
+
+    # Option to specify a custom configuration JSON file.
+    parser.add_argument(
+        \"--config\",
+        type=str,
+        default=\"config.json\",
+        help=\"Path to the configuration JSON file (default: config.json)\",
+    )
+
+    return parser.parse_args()
+
+
+def main() -> None:
+    \"\"\"Entry point called when running this script as a program.\"\"\"
+    # Parse command-line arguments.
+    args = parse_args()
+
+    # Set environment variable so perfectm.config uses this configuration file.
+    os.environ[\"PERFECTM_CONFIG\"] = args.config
+
+    # Run the high-level workflow.
+    run_full_pipeline()
+
+
+if __name__ == \"__main__\":
     main()
