@@ -1,0 +1,33 @@
+# Core numerical stack
+numpy
+scipy
+
+# Raster and geospatial I/O
+rasterio
+affine
+pyproj
+
+# NetCDF CF I/O
+netCDF4
+
+# MPI parallelization
+mpi4py
+
+# Hydrological / D8 flow direction (optional but recommended)
+richdem
+
+# Plotting & diagnostics
+matplotlib
+
+# Progress bars
+tqdm
+
+# Optional: GPU acceleration (Uncomment the correct line for your CUDA version)
+# cupy-cuda11x>=12.0
+# cupy-cuda12x>=12.0
+# cupy>=12.0  # for ROCm / CPU fallback wheels
+
+# Optional: xarray/dask for advanced NetCDF workflows
+# xarray>=2023.7
+# dask[complete]>=2023.7
+
