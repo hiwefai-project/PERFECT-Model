@@ -1,0 +1,28 @@
+{
+  "paths": {
+    "dem": "data/dem/dem.tif",
+    "cn_map": "data/cn/cn.nc",
+    "radar": "data/radar/radar.nc",
+    "runoff_output": "data/output/runoff.nc",
+    "flood_risk_output": "data/output/flood_risk.nc",
+    "d8_flowdir": "data/output/flowdir.tif",
+    "work_dir": "data/work"
+  },
+  "variables": {
+    "cn_var": "cn",
+    "radar_var": "precipitation",
+    "time_dim": "time"
+  },
+  "io": {
+    "runoff_format": "netcdf",
+    "flood_risk_format": "netcdf"
+  },
+  "hydrology": {
+    "flood_threshold_mm": 50.0,
+    "apply_sea_mask": true
+  },
+  "mpi": {
+    "enabled": true,
+    "chunks_per_rank": 4
+  }
+}
